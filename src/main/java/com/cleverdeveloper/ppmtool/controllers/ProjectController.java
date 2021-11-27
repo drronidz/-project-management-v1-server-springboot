@@ -2,7 +2,7 @@ package com.cleverdeveloper.ppmtool.controllers;
 
 import com.cleverdeveloper.ppmtool.domain.Project;
 import com.cleverdeveloper.ppmtool.services.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cleverdeveloper.ppmtool.services.ValidationErrorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /*
@@ -29,24 +28,21 @@ DATE : 11/26/2021 10:39 PM
 public class ProjectController {
 
     final ProjectService projectService;
+    final ValidationErrorService validationErrorService;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, ValidationErrorService validationErrorService) {
         this.projectService = projectService;
+        this.validationErrorService = validationErrorService;
     }
 
 
     @PostMapping("")
     public ResponseEntity <?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
 
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
+        ResponseEntity<?> errorMap = validationErrorService.MapValidationService(result);
 
-            for(FieldError error: result.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            // return new ResponseEntity<String>("Invalid Project Object ", HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+        if (errorMap != null) {
+            return errorMap;
         }
 
         Project project1 = projectService.saveOrUpdateProject(project);
