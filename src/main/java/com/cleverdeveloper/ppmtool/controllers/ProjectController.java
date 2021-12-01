@@ -18,10 +18,8 @@ DATE : 11/26/2021 10:39 PM
 */
 
 @RestController
-@RequestMapping(
-        value = "/api/project",
-        produces = "application/json",
-        method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
+@RequestMapping("/api/project")
+@CrossOrigin
 public class ProjectController {
 
     final ProjectService projectService;
