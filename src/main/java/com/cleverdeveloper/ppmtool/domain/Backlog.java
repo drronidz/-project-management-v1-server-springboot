@@ -1,5 +1,7 @@
 package com.cleverdeveloper.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /*
@@ -18,6 +20,10 @@ public class Backlog {
     private String projectIdentifier;
 
     //OneToOne with Project
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="project_id", nullable = false)
+    @JsonIgnore
+    private Project project;
 
     //OneToMany projectTask
 
@@ -47,5 +53,13 @@ public class Backlog {
 
     public void setProjectIdentifier(String projectIdentifier) {
         this.projectIdentifier = projectIdentifier;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

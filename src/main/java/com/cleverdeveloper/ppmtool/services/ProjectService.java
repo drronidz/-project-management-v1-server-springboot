@@ -1,9 +1,10 @@
 package com.cleverdeveloper.ppmtool.services;
 
+import com.cleverdeveloper.ppmtool.domain.Backlog;
 import com.cleverdeveloper.ppmtool.domain.Project;
 import com.cleverdeveloper.ppmtool.exceptions.ProjectIdException;
+import com.cleverdeveloper.ppmtool.repositories.BacklogRepository;
 import com.cleverdeveloper.ppmtool.repositories.ProjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /*
@@ -16,9 +17,11 @@ DATE : 11/26/2021 10:38 PM
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final BacklogRepository backlogRepository;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository, BacklogRepository backlogRepository) {
         this.projectRepository = projectRepository;
+        this.backlogRepository = backlogRepository;
     }
 
     public Project saveOrUpdateProject(Project project) {
@@ -26,6 +29,18 @@ public class ProjectService {
         // Logic
         try {
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+
+            if (project.getId() == null) {
+                Backlog backlog = new Backlog();
+                project.setBacklog(backlog);
+                backlog.setProject(project);
+                backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            }
+
+            if (project.getId() != null) {
+                project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
+            }
+
             return projectRepository.save(project);
         }
         catch (Exception e) {
