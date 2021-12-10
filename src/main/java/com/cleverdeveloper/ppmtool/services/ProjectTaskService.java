@@ -22,7 +22,7 @@ public class ProjectTaskService {
     private final ProjectTaskRepository projectTaskRepository;
     private final ProjectRepository projectRepository;
 
-    public ProjectTaskService(
+    public ProjectTaskService (
             BacklogRepository backlogRepository,
             ProjectTaskRepository projectTaskRepository,
             ProjectRepository projectRepository)
@@ -32,7 +32,7 @@ public class ProjectTaskService {
         this.projectRepository = projectRepository;
     }
 
-    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
+    public ProjectTask addProjectTask (String projectIdentifier, ProjectTask projectTask) {
         // TODO Exceptions:
         //  { ProjectNotFound : "Project not Found" }
         try {
@@ -70,7 +70,7 @@ public class ProjectTaskService {
 
     }
 
-    public Iterable<ProjectTask> findBacklogById(String projectId) {
+    public Iterable<ProjectTask> findBacklogById (String projectId) {
 
         Project project = projectRepository.findByProjectIdentifier(projectId);
 
@@ -80,4 +80,11 @@ public class ProjectTaskService {
 
         return projectTaskRepository.findByProjectIdentifierOrderByPriority(projectId);
     }
+
+    public ProjectTask findProjectTaskByProjectSequence (String backlogId,String projectSequence) {
+        // Make sure we are searching on the right backlog
+        return projectTaskRepository.findByProjectSequence(projectSequence);
+    }
+
+
 }

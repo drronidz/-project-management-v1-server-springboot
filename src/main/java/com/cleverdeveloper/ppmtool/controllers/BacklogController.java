@@ -25,7 +25,10 @@ public class BacklogController {
     final private ProjectTaskService projectTaskService;
     final private ValidationErrorService validationErrorService;
 
-    public BacklogController(ProjectTaskService projectTaskService, ValidationErrorService validationErrorService) {
+    public BacklogController
+            (ProjectTaskService projectTaskService,
+             ValidationErrorService validationErrorService)
+    {
         this.projectTaskService = projectTaskService;
         this.validationErrorService = validationErrorService;
     }
@@ -34,8 +37,8 @@ public class BacklogController {
     public ResponseEntity<?> addProjectTaskBacklog (
             @Valid @RequestBody ProjectTask projectTask,
             BindingResult result,
-            @PathVariable String backlogId
-    ) {
+            @PathVariable String backlogId)
+    {
         ResponseEntity<?> errors = validationErrorService.MapValidationService(result);
 
         if (errors != null) {
@@ -48,7 +51,17 @@ public class BacklogController {
     }
 
     @GetMapping("/{backlogId}")
-    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlogId) {
+    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlogId)
+    {
         return projectTaskService.findBacklogById(backlogId);
+    }
+
+    @GetMapping("/{backlogId}/{projectSequence}")
+    public ResponseEntity<?> getProjectTask(
+            @PathVariable String backlogId,
+            @PathVariable String projectSequence)
+    {
+        ProjectTask projectTask = projectTaskService.findProjectTaskByProjectSequence(backlogId, projectSequence);
+        return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
     }
 }
