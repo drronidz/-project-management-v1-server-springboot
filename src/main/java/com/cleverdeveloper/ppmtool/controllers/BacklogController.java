@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /*
 PROJECT NAME : ppmtool
@@ -29,20 +30,25 @@ public class BacklogController {
         this.validationErrorService = validationErrorService;
     }
 
-    @PostMapping("/{backlog_id}")
+    @PostMapping("/{backlogId}")
     public ResponseEntity<?> addProjectTaskBacklog (
             @Valid @RequestBody ProjectTask projectTask,
             BindingResult result,
-            @PathVariable String backlog_id
+            @PathVariable String backlogId
     ) {
         ResponseEntity<?> errors = validationErrorService.MapValidationService(result);
 
-        if(errors != null) {
+        if (errors != null) {
             return errors;
         }
 
-        ProjectTask projectTaskOne = projectTaskService.addProjectTask(backlog_id, projectTask);
+        ProjectTask projectTaskOne = projectTaskService.addProjectTask(backlogId, projectTask);
 
         return new ResponseEntity<ProjectTask>(projectTaskOne, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{backlogId}")
+    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlogId) {
+        return projectTaskService.findBacklogById(backlogId);
     }
 }

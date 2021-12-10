@@ -13,6 +13,8 @@ import com.cleverdeveloper.ppmtool.repositories.BacklogRepository;
 import com.cleverdeveloper.ppmtool.repositories.ProjectTaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectTaskService {
     private final BacklogRepository backlogRepository;
@@ -53,5 +55,9 @@ public class ProjectTaskService {
         }
 
         return projectTaskRepository.save(projectTask);
+    }
+
+    public Iterable<ProjectTask> findBacklogById(String backlogId) {
+        return projectTaskRepository.findByProjectIdentifierOrderByPriority(backlogId);
     }
 }
