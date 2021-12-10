@@ -35,15 +35,17 @@ public class ProjectTaskService {
         // TODO We want our project sequence to be like this: IDPRO-1 IDPRO-2 ... 100
         Integer backlogSequence = backlog.getPTSequence();
         backlogSequence++;
+        backlog.setPTSequence(backlogSequence);
 
         // TODO Update The Backlog sequence
         projectTask.setProjectSequence(projectIdentifier + "-" + backlogSequence);
         projectTask.setProjectIdentifier(projectIdentifier);
 
         // TODO Setting an INITIAL Priority when priority null
-//        if (projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
-//            projectTask.setPriority(3);
-//        }
+        if (projectTask.getPriority() == null) {
+            // TODO In the future we need projectTask.getPriority() == 0 to handle the Form ...
+            projectTask.setPriority(3);
+        }
 
         // TODO Setting an INITIAL Status when status is null
         if (projectTask.getStatus() == "" || projectTask.getStatus() == null) {
