@@ -8,7 +8,6 @@ DATE : 12/3/2021 2:32 PM
 */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
