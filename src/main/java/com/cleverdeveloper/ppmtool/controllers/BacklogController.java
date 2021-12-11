@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.PushBuilder;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -63,5 +64,23 @@ public class BacklogController {
     {
         ProjectTask projectTask = projectTaskService.findProjectTaskByProjectSequence(backlogId, projectSequence);
         return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{backlogId}/{projectTaskId}")
+    public ResponseEntity<?> updateProjectTask(
+            @Valid @RequestBody ProjectTask projectTask,
+            BindingResult result,
+            @PathVariable String backlogId,
+            @PathVariable String projectTaskId)
+    {
+        ResponseEntity<?> errors  = validationErrorService.MapValidationService(result);
+
+        if (errors != null) {
+            return errors;
+        }
+
+        ProjectTask updatedTask = projectTaskService.updateByProjectSequence(projectTask, backlogId, projectTaskId);
+
+        return new ResponseEntity<ProjectTask>(updatedTask, HttpStatus.OK);
     }
 }
