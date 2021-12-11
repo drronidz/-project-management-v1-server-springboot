@@ -83,7 +83,25 @@ public class ProjectTaskService {
 
     public ProjectTask findProjectTaskByProjectSequence (String backlogId,String projectSequence) {
         // Make sure we are searching on the right backlog
-        return projectTaskRepository.findByProjectSequence(projectSequence);
+        Backlog backlog = backlogRepository.findByProjectIdentifier(backlogId);
+
+        if (backlog== null) {
+            throw new ProjectNotFoundException("Project with ID: " + backlogId + " does not exist");
+        }
+
+        // Make sure that our task exists
+        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectSequence);
+
+        if (projectTask == null) {
+            throw new ProjectNotFoundException("Project Task " + projectSequence + " not found");
+        }
+
+        // Make sure that the backlog/project id in the path corresponds to the right project
+        if (!projectTask.getProjectIdentifier().equals(backlogId)) {
+            throw new ProjectNotFoundException("Project Task " + projectSequence + " does not exist in project: " + backlogId);
+        }
+
+        return projectTask;
     }
 
 
