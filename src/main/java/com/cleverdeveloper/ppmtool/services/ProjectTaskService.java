@@ -16,6 +16,8 @@ import com.cleverdeveloper.ppmtool.repositories.ProjectRepository;
 import com.cleverdeveloper.ppmtool.repositories.ProjectTaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectTaskService {
     private final BacklogRepository backlogRepository;
@@ -104,9 +106,20 @@ public class ProjectTaskService {
         return projectTask;
     }
 
+    public void deleteProjectTaskByProjectSequence(String backlogId, String projectTaskId) {
+        ProjectTask projectTask = findProjectTaskByProjectSequence(backlogId, projectTaskId);
+
+        Backlog backlog = projectTask.getBacklog();
+        List<ProjectTask> projectTasks = backlog.getProjectTasks();
+        projectTasks.remove(projectTask);
+        backlogRepository.save(backlog);
+
+        projectTaskRepository.delete(projectTask);
+    }
+
     // TODO Update Project Task ...
     public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String backlogId, String projectTaskId) {
-        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectTaskId);
+        ProjectTask projectTask = findProjectTaskByProjectSequence(backlogId, projectTaskId);
 
         projectTask = updatedTask;
 
