@@ -7,6 +7,7 @@ Author Name : @ DRRONIDZ
 DATE : 12/3/2021 2:32 PM
 */
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -28,6 +29,8 @@ public class ProjectTask {
     private String acceptanceCriteria;
     private String status;
     private Integer priority;
+
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date dueDate;
 
     // ManyToOne with Backlog
